@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: enterprise-cicd-ingress
+  namespace: enterprise-cicd
+
+  labels:
+    app: enterprise-cicd-platform
+
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "30"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+
+spec:
+
+  ingressClassName: nginx
+
+  rules:
+
+    - host: enterprise-cicd.local
+
+      http:
+
+        paths:
+
+          - path: /
+            pathType: Prefix
+
+            backend:
+              service:
+                name: enterprise-cicd-service
+                port:
+                  number: 80
