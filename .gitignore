@@ -1,0 +1,277 @@
+# ============================================================
+
+# Enterprise CI/CD Platform - Git Ignore Rules
+
+# ============================================================
+
+# -------------------------
+
+# Operating System
+
+# -------------------------
+
+.DS_Store
+.DS_Store?
+Thumbs.db
+Desktop.ini
+
+# -------------------------
+
+# IDE / Editors
+
+# -------------------------
+
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# -------------------------
+
+# Python
+
+# -------------------------
+
+**pycache**/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# -------------------------
+
+# Environment / Secrets
+
+# -------------------------
+
+.env
+.env.*
+!.env.example
+
+*.pem
+*.key
+*.crt
+
+secrets/
+credentials/
+*.secret
+secret.yaml
+secrets.yaml
+
+# Never commit API keys, tokens,
+
+# passwords or cloud credentials.
+
+# -------------------------
+
+# Logs
+
+# -------------------------
+
+*.log
+logs/
+log/
+npm-debug.log*
+yarn-debug.log*
+debug.log*
+
+# -------------------------
+
+# Docker
+
+# -------------------------
+
+docker-compose.override.yml
+.docker/
+docker-data/
+*.docker.env
+
+# -------------------------
+
+# Docker Scout
+
+# -------------------------
+
+.scout/
+docker-scout-results/
+scout-results/
+
+# -------------------------
+
+# Jenkins
+
+# -------------------------
+
+jenkins_home/
+jenkins-data/
+*.jpi
+*.hpi
+
+# -------------------------
+
+# Kubernetes
+
+# -------------------------
+
+.kube/
+kubeconfig
+kubeconfig.*
+*.kubeconfig
+
+# -------------------------
+
+# Terraform
+
+# -------------------------
+
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+
+# Terraform variable files may contain
+
+# credentials or sensitive information.
+
+# Use *.tfvars.example for templates.
+
+# -------------------------
+
+# Ansible
+
+# -------------------------
+
+*.retry
+.vault_password
+vault-password-file
+
+# -------------------------
+
+# Node.js (if application changes)
+
+# -------------------------
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# -------------------------
+
+# Test / Coverage
+
+# -------------------------
+
+coverage/
+.coverage
+coverage.xml
+.pytest_cache/
+
+# -------------------------
+
+# Build Artifacts
+
+# -------------------------
+
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.bin
+
+artifacts/
+output/
+release/
+
+# -------------------------
+
+# Temporary Files
+
+# -------------------------
+
+*.tmp
+*.temp
+*.bak
+*.old
+*.orig
+
+tmp/
+temp/
+
+# -------------------------
+
+# Local Configuration
+
+# -------------------------
+
+local/
+.local/
+
+# -------------------------
+
+# Database / Local Data
+
+# -------------------------
+
+*.db
+*.sqlite
+*.sqlite3
+
+# -------------------------
+
+# Reports
+
+# -------------------------
+
+reports/
+security-reports/
+scan-results/
+
+# -------------------------
+
+# OS / Shell History
+
+# -------------------------
+
+.bash_history
+.zsh_history
+
+# -------------------------
+
+# Application-specific
+
+# -------------------------
+
+instance/
+
+# -------------------------
+
+# Keep Example Files
+
+# -------------------------
+
+!.env.example
+!.env.template
+!.tfvars.example
+!.yaml.example
+!.yml.example
