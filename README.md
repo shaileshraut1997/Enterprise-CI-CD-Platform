@@ -170,3 +170,79 @@ enterprise-cicd-platform/
     ├── deployment.md
     ├── troubleshooting.md
     └── rca.md
+
+
+
+
+
+Complete Workflow
+============================================================================
+
+                         ENTERPRISE CI/CD PLATFORM
+                                  │
+                                  ▼
+                           👨‍💻 Developer
+                                  │
+                                  ▼
+                           Git + GitHub
+                                  │
+                                  ▼
+                        GitHub Pull Request
+                                  │
+                                  ▼
+                       ┌────────────────────┐
+                       │   GitHub Actions   │
+                       │       CI           │
+                       └─────────┬──────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    ▼                         ▼
+              Maven Build                 JUnit Tests
+                    │                         │
+                    └────────────┬────────────┘
+                                 ▼
+                            SonarQube
+                       Code Quality / Bugs
+                       Vulnerability Check
+                                 │
+                                 ▼
+                              Docker
+                         Build Image
+                                 │
+                                 ▼
+                         Docker Scout
+                       Image Security Scan
+                                 │
+                                 ▼
+                       Container Registry
+                                 │
+                                 ▼
+                            Jenkins
+                              CD
+                                 │
+                                 ▼
+                          Kubernetes
+                                 │
+                    ┌────────────┼────────────┐
+                    ▼            ▼            ▼
+                  Pod 1        Pod 2        Pod 3
+                    │            │            │
+                    └────────────┼────────────┘
+                                 ▼
+                              Service
+                                 │
+                                 ▼
+                              Ingress
+                                 │
+                                 ▼
+                            Application
+                                 │
+                                 ▼
+                             Datadog
+                    ┌────────────┼────────────┐
+                    ▼            ▼            ▼
+                  Logs        Metrics        APM
+                    │            │            │
+                    └────────────┼────────────┘
+                                 ▼
+                         Alerts / Dashboard
