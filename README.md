@@ -103,13 +103,27 @@ enterprise-cicd-platform/
 ├── LICENSE
 ├── .gitignore
 ├── CONTRIBUTING.md
+├── pom.xml
 │
 ├── app/
 │   ├── src/
-│   │   └── app.py
-│   ├── tests/
-│   │   └── test_app.py
-│   ├── requirements.txt
+│   │   ├── main/
+│   │   │   ├── java/
+│   │   │   │   └── com/
+│   │   │   │       └── shailesh/
+│   │   │   │           └── cicd/
+│   │   │   │               └── Application.java
+│   │   │   │
+│   │   │   └── resources/
+│   │   │       └── application.properties
+│   │   │
+│   │   └── test/
+│   │       └── java/
+│   │           └── com/
+│   │               └── shailesh/
+│   │                   └── cicd/
+│   │                       └── ApplicationTest.java
+│   │
 │   └── Dockerfile
 │
 ├── docker/
@@ -156,8 +170,3 @@ enterprise-cicd-platform/
     ├── deployment.md
     ├── troubleshooting.md
     └── rca.md
-
-
-
-
-
