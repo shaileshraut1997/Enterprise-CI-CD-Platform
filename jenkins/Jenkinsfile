@@ -1,0 +1,104 @@
+pipeline {
+
+    agent any
+
+    environment {
+        APP_NAME = 'enterprise-cicd-platform'
+        IMAGE_NAME = 'enterprise-cicd-platform'
+        IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo 'Checking out source code from GitHub...'
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building Java Spring Boot application...'
+
+                sh 'chmod +x jenkins/scripts/build.sh'
+                sh './jenkins/scripts/build.sh'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running JUnit tests...'
+
+                sh 'chmod +x jenkins/scripts/test.sh'
+                sh './jenkins/scripts/test.sh'
+            }
+
+            post {
+                always {
+                    junit 'app/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                echo 'Building Docker image...'
+
+                sh """
+                    docker build \
+                    -f docker/Dockerfile.prod \
+                    -t ${IMAGE_NAME}:${IMAGE_TAG} \
+                    .
+                """
+            }
+        }
+
+        stage('Docker Scout Security Scan') {
+            steps {
+                echo 'Scanning Docker image with Docker Scout...'
+
+                sh """
+                    docker scout quickview ${IMAGE_NAME}:${IMAGE_TAG}
+                """
+
+                sh """
+                    docker scout cves ${IMAGE_NAME}:${IMAGE_TAG}
+                """
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                echo 'Deploying application to Kubernetes...'
+
+                sh 'chmod +x jenkins/scripts/deploy.sh'
+
+                sh """
+                    IMAGE_NAME=${IMAGE_NAME} \
+                    IMAGE_TAG=${IMAGE_TAG} \
+                    ./jenkins/scripts/deploy.sh
+                """
+            }
+        }
+    }
+
+    post {
+
+        success {
+            echo '=========================================='
+            echo 'CI/CD PIPELINE SUCCESSFUL'
+            echo '=========================================='
+        }
+
+        failure {
+            echo '=========================================='
+            echo 'CI/CD PIPELINE FAILED'
+            echo '=========================================='
+        }
+
+        always {
+            echo 'Pipeline execution completed.'
+        }
+    }
+}
