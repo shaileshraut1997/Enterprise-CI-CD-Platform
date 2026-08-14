@@ -1,0 +1,56 @@
+# ============================================================
+# SMR Enterprise CI/CD Platform
+# Production Docker Image
+# ============================================================
+
+# ------------------------------------------------------------
+# Stage 1: Build
+# ------------------------------------------------------------
+
+FROM maven:3.9-eclipse-temurin-21 AS builder
+
+WORKDIR /build
+
+# Copy Maven configuration
+COPY app/pom.xml .
+
+# Download dependencies first for better caching
+RUN mvn dependency:go-offline -B
+
+# Copy application source
+COPY app/src ./src
+
+# Build production JAR
+RUN mvn clean package -DskipTests
+
+
+# ------------------------------------------------------------
+# Stage 2: Production Runtime
+# ------------------------------------------------------------
+
+FROM eclipse-temurin:21-jre
+
+# Application directory
+WORKDIR /app
+
+# Create non-root application user
+RUN useradd --system --uid 1001 --create-home appuser
+
+# Copy only the final JAR
+COPY --from=builder /build/target/*.jar app.jar
+
+# Set ownership
+RUN chown -R appuser:appuser /app
+
+# Run application as non-root user
+USER appuser
+
+# Application port
+EXPOSE 8080
+
+# JVM configuration
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 \
+               -XX:+UseG1GC"
+
+# Production application startup
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]
