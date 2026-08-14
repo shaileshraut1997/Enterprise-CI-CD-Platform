@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+
+  # ==========================================================
+  # Enterprise CI/CD Platform Application
+  # ==========================================================
+  application:
+
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.prod
+
+    container_name: enterprise-cicd-platform
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      ENVIRONMENT: development
+
+    restart: unless-stopped
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "java",
+          "-version"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+    networks:
+      - enterprise-network
+
+
+# ============================================================
+# Network
+# ============================================================
+
+networks:
+
+  enterprise-network:
+    driver: bridge
