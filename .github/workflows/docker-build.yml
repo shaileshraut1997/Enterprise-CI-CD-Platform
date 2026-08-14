@@ -1,0 +1,63 @@
+name: Docker Build and Security Scan
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  docker:
+
+    name: Build Docker Image
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # -----------------------------------------
+      # Checkout Repository
+      # -----------------------------------------
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+
+      # -----------------------------------------
+      # Setup Docker Buildx
+      # -----------------------------------------
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+
+      # -----------------------------------------
+      # Build Docker Image
+      # -----------------------------------------
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.prod
+          push: false
+          tags: |
+            enterprise-cicd-platform:${{ github.sha }}
+            enterprise-cicd-platform:latest
+
+
+      # -----------------------------------------
+      # Docker Scout
+      # -----------------------------------------
+
+      - name: Docker Scout Scan
+        uses: docker/scout-action@v1
+        with:
+          command: cves
+          image: enterprise-cicd-platform:${{ github.sha }}
+          only-severities: critical,high
+          exit-code: true
