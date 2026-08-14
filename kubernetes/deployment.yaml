@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: enterprise-cicd-platform
+  namespace: enterprise-cicd
+
+  labels:
+    app: enterprise-cicd-platform
+
+spec:
+
+  # Number of application replicas
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: enterprise-cicd-platform
+
+  strategy:
+    type: RollingUpdate
+
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+
+  template:
+
+    metadata:
+      labels:
+        app: enterprise-cicd-platform
+
+    spec:
+
+      containers:
+
+        - name: enterprise-cicd-platform
+
+          # Replace this with your actual container registry image
+          image: your-dockerhub-username/enterprise-cicd-platform:1.0.0
+
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+
+          # Non-sensitive configuration
+          envFrom:
+            - configMapRef:
+                name: enterprise-cicd-config
+
+          # Sensitive configuration
+          env:
+            - name: APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: enterprise-cicd-secret
+                  key: APP_SECRET
+
+          # Kubernetes startup health check
+          startupProbe:
+            httpGet:
+              path: /api/v1/actuator/health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 12
+
+          # Kubernetes readiness check
+          readinessProbe:
+            httpGet:
+              path: /api/v1/actuator/health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          # Kubernetes liveness check
+          livenessProbe:
+            httpGet:
+              path: /api/v1/actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          # Resource management
+          resources:
+
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+          # Security
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+
+      # Don't automatically mount service account credentials
+      automountServiceAccountToken: false
