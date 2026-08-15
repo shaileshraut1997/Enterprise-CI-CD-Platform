@@ -1,0 +1,23 @@
+{
+  "name": "Enterprise CI/CD Platform - High CPU Usage",
+  "type": "metric alert",
+  "query": "avg(last_5m):avg:kubernetes.cpu.usage.total{namespace:enterprise-cicd} by {pod_name} > 0.8",
+  "message": "High CPU usage detected for pod {{pod.name}} in the enterprise-cicd namespace.\n\nInvestigate Kubernetes pod CPU consumption and application workload.\n\n@ops-team",
+  "tags": [
+    "service:enterprise-cicd-platform",
+    "environment:production",
+    "team:devops",
+    "severity:warning"
+  ],
+  "options": {
+    "thresholds": {
+      "critical": 0.8,
+      "warning": 0.6
+    },
+    "notify_no_data": false,
+    "include_tags": true,
+    "require_full_window": true,
+    "evaluation_delay": 60
+  },
+  "priority": 2
+}
