@@ -1,0 +1,23 @@
+{
+  "name": "Enterprise CI/CD Platform - High Memory Usage",
+  "type": "metric alert",
+  "query": "avg(last_5m):avg:kubernetes.memory.usage_bytes{namespace:enterprise-cicd} by {pod_name} > 400000000",
+  "message": "High memory usage detected for pod {{pod.name}} in the enterprise-cicd namespace.\n\nInvestigate memory consumption, application workload, and possible memory leaks.\n\n@ops-team",
+  "tags": [
+    "service:enterprise-cicd-platform",
+    "environment:production",
+    "team:devops",
+    "severity:warning"
+  ],
+  "options": {
+    "thresholds": {
+      "critical": 400000000,
+      "warning": 300000000
+    },
+    "notify_no_data": false,
+    "include_tags": true,
+    "require_full_window": true,
+    "evaluation_delay": 60
+  },
+  "priority": 2
+}
