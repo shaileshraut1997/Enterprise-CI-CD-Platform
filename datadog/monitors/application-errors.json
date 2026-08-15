@@ -1,0 +1,23 @@
+{
+  "name": "Enterprise CI/CD Platform - Application Error Rate",
+  "type": "metric alert",
+  "query": "sum(last_5m):sum:trace.servlet.request.errors{service:enterprise-cicd-platform} by {http.status_class} > 10",
+  "message": "High application error rate detected for Enterprise CI/CD Platform.\n\nInvestigate Spring Boot application logs, Kubernetes pod health, recent deployments, and Datadog APM traces.\n\n@ops-team",
+  "tags": [
+    "service:enterprise-cicd-platform",
+    "environment:production",
+    "team:devops",
+    "severity:critical"
+  ],
+  "options": {
+    "thresholds": {
+      "critical": 10,
+      "warning": 5
+    },
+    "notify_no_data": false,
+    "include_tags": true,
+    "require_full_window": true,
+    "evaluation_delay": 60
+  },
+  "priority": 1
+}
