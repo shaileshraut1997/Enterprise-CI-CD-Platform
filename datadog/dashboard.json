@@ -1,0 +1,179 @@
+{
+  "title": "Enterprise CI/CD Platform - Production Overview",
+  "description": "Production monitoring dashboard for the Enterprise CI/CD Platform running on Kubernetes.",
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "template_variables": [
+    {
+      "name": "namespace",
+      "prefix": "kube_namespace",
+      "default": "enterprise-cicd"
+    },
+    {
+      "name": "pod",
+      "prefix": "pod_name",
+      "default": "*"
+    }
+  ],
+  "widgets": [
+    {
+      "definition": {
+        "title": "Kubernetes Pod CPU Usage",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:kubernetes.cpu.usage.total{namespace:$namespace,pod_name:$pod} by {pod_name}",
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "include_zero": true,
+          "min": "0",
+          "max": "auto"
+        }
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 6,
+        "height": 4
+      }
+    },
+    {
+      "definition": {
+        "title": "Kubernetes Pod Memory Usage",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:kubernetes.memory.usage_bytes{namespace:$namespace,pod_name:$pod} by {pod_name}",
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "scale": "linear",
+          "include_zero": true,
+          "min": "0",
+          "max": "auto"
+        }
+      },
+      "layout": {
+        "x": 6,
+        "y": 0,
+        "width": 6,
+        "height": 4
+      }
+    },
+    {
+      "definition": {
+        "title": "Running Kubernetes Pods",
+        "type": "query_value",
+        "requests": [
+          {
+            "q": "sum:kubernetes.pods.running{namespace:$namespace}"
+          }
+        ],
+        "autoscale": true,
+        "precision": 0
+      },
+      "layout": {
+        "x": 0,
+        "y": 4,
+        "width": 4,
+        "height": 3
+      }
+    },
+    {
+      "definition": {
+        "title": "Application Error Rate",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "sum:trace.servlet.request.errors{service:enterprise-cicd-platform} by {http.status_class}",
+            "display_type": "line"
+          }
+        ]
+      },
+      "layout": {
+        "x": 4,
+        "y": 4,
+        "width": 8,
+        "height": 3
+      }
+    },
+    {
+      "definition": {
+        "title": "HTTP Request Rate",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "sum:trace.servlet.request.hits{service:enterprise-cicd-platform} by {resource_name}",
+            "display_type": "line"
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 7,
+        "width": 6,
+        "height": 4
+      }
+    },
+    {
+      "definition": {
+        "title": "Application Response Time",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "avg:trace.servlet.request.duration{service:enterprise-cicd-platform} by {resource_name}",
+            "display_type": "line"
+          }
+        ]
+      },
+      "layout": {
+        "x": 6,
+        "y": 7,
+        "width": 6,
+        "height": 4
+      }
+    },
+    {
+      "definition": {
+        "title": "Kubernetes Container Restarts",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "sum:kubernetes.containers.restarts{namespace:$namespace,pod_name:$pod} by {pod_name}",
+            "display_type": "bars"
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 11,
+        "width": 6,
+        "height": 4
+      }
+    },
+    {
+      "definition": {
+        "title": "Kubernetes Pod Availability",
+        "type": "query_value",
+        "requests": [
+          {
+            "q": "avg:kubernetes.pods.running{namespace:$namespace}"
+          }
+        ],
+        "autoscale": true,
+        "precision": 0
+      },
+      "layout": {
+        "x": 6,
+        "y": 11,
+        "width": 6,
+        "height": 4
+      }
+    }
+  ]
+}
