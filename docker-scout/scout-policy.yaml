@@ -1,0 +1,55 @@
+# ============================================================
+# Enterprise CI/CD Platform
+# Docker Scout Security Policy
+# ============================================================
+
+version: 1
+
+policy:
+  name: enterprise-cicd-security-policy
+  description: >
+    Security policy for container images used by the
+    Enterprise CI/CD Platform.
+
+  # ----------------------------------------------------------
+  # Vulnerability Policy
+  # ----------------------------------------------------------
+
+  vulnerabilities:
+
+    # Fail the pipeline for critical vulnerabilities
+    critical:
+      action: fail
+
+    # Fail the pipeline for high vulnerabilities
+    high:
+      action: fail
+
+    # Medium vulnerabilities generate warnings
+    medium:
+      action: warn
+
+    # Low vulnerabilities are reported
+    low:
+      action: report
+
+  # ----------------------------------------------------------
+  # Fixable Vulnerabilities
+  # ----------------------------------------------------------
+
+  fixable:
+    action: prioritize
+
+  # ----------------------------------------------------------
+  # Base Image Policy
+  # ----------------------------------------------------------
+
+  base_image:
+    require_up_to_date: true
+
+  # ----------------------------------------------------------
+  # Security Exceptions
+  # ----------------------------------------------------------
+
+  exceptions:
+    enabled: false
